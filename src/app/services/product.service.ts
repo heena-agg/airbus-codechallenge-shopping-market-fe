@@ -2,6 +2,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment'
 import { Product } from '../models/product.model';
+import { catchError } from 'rxjs/operators';  
+import { throwError } from 'rxjs'; 
 
 @Injectable({
   providedIn: 'root'
@@ -12,10 +14,6 @@ export class ProductService {
   readonly GET_CATEGORY_PRODUCT = environment.baseUrl + 'product/category/';
   readonly UPDATE_PRODUCT = environment.baseUrl + 'product/';
   readonly CREATE_PRODUCT = environment.baseUrl + 'product';
-
-  productList : Product[] = []
-  product : Product = new Product()
-  productId : number = 0
 
   constructor(private http: HttpClient) { }
 
@@ -28,19 +26,39 @@ export class ProductService {
   public getProductList()
   {   
     return this.http.get<Product[]>(this.GET_PRODUCT , { headers : this.header})   
+    .pipe(
+      catchError((err) => {  
+        return throwError(err.error);  
+      }) 
+    )   
   }
 
   public createProduct(product : Product)
   {
-    return this.http.post(this.CREATE_PRODUCT, product, { headers : this.header})    
+    return this.http.post(this.CREATE_PRODUCT, product, { headers : this.header}) 
+    .pipe(
+      catchError((err) => {  
+        return throwError(err.error);  
+      }) 
+    )   
   }
 
   public updateProduct(product : Product){
     return this.http.put(this.UPDATE_PRODUCT + product.productId, product, { headers : this.header})    
+    .pipe(
+      catchError((err) => {  
+        return throwError(err.error);  
+      }) 
+    )   
   }
 
   public getCategoryProduct(category : string){   
     return this.http.get<Product[]>(this.GET_CATEGORY_PRODUCT + category, { headers : this.header})   
+    .pipe(
+      catchError((err) => {  
+        return throwError(err.error);  
+      }) 
+    )   
   }
 
 
@@ -48,8 +66,8 @@ export class ProductService {
   {    
     let categoryList : string[] = []
     for(var i =0;i<productList.length;i++){
-     if(categoryList.indexOf(productList[i].category)==-1){
-        categoryList.push(productList[i].category)
+     if(categoryList.indexOf(productList[i].category.toUpperCase())==-1){
+        categoryList.push(productList[i].category.toUpperCase())
       }        
     } 
     return categoryList;

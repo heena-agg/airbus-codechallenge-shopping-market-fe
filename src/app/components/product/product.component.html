@@ -2,7 +2,7 @@
     <div class="row">
         <h3> Welcome to AIRBUS !!! </h3>
         <div class="container row">           
-                <input style="width:75%" type="text" name="search" id="search" placeholder="Search">
+                <input style="width:75%" type="text" name="search" id="search" placeholder="Search" [(ngModel)]="searchText">
                 
                 <div class="dropdown">
                     <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -34,17 +34,18 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let product of productList; let i = index; "> 
-                    <th> <input type="radio" name="product" value="product_{{i}}"
-                        (change)="onProductSelect(product, i)"> </th>
+                <tr *ngFor="let product of (productList | search : searchText) ; let i = index; "> 
+                    <th> <input type="radio" name="product" value="product_{{i}}" 
+                      id="product_{{i}}" (change)="onProductSelect(product, i)"> </th>
                     <th> {{ product.productId }} </th>
                     <th> {{ product.productName }} </th>
                     <th> {{ product.productDescription }} </th>
-                    <th> {{ product.category }} </th>
+                    <th> {{ product.category | uppercase }} </th>
                     <th> {{ product.units }} </th>
                 </tr>
             </tbody>
         </table>
+        <div *ngIf="productList.length===0"> NO Data Found !! </div>
 
     </div>
 </div>

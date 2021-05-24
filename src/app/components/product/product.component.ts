@@ -11,11 +11,12 @@ export class ProductComponent implements OnInit {
 
   productList : Product[] = []
   product : Product = new Product()
-  search : string = ""
+  searchText : string = ""
   disabled : boolean = true
   category : string = ""
   categoryList : string[] = []
   isAddOrUpdate : boolean = false
+  index : number = 0
 
   constructor(private productService : ProductService) { }
 
@@ -46,7 +47,7 @@ export class ProductComponent implements OnInit {
         this.categoryList.push("All")
       },
       error => {
-          alert("error occured while fetching product details")
+        alert(error.httpStatus  + "\n" + error.errorDescription)
       }
     )
   }
@@ -59,7 +60,7 @@ export class ProductComponent implements OnInit {
         this.productList = response  
       },
       error => {
-        alert("error occured while getting product based on category")
+        alert(error.httpStatus  + "\n" + error.errorDescription)
       }
     )
   }
@@ -77,6 +78,7 @@ export class ProductComponent implements OnInit {
   onProductSelect(product : Product, index : number){
     this.product = product   
     this.disabled = false
+    this.index = index
   }
 
   saveProductDetails()
@@ -100,7 +102,7 @@ export class ProductComponent implements OnInit {
           this.getProductList()        
       },
       error => {
-          alert("error occurred while creating product")
+        alert(error.httpStatus  + "\n" + error.errorDescription)
       }
     )    
   }
@@ -111,13 +113,22 @@ export class ProductComponent implements OnInit {
     .subscribe(
       response => {        
         alert("updated the product")
-        this.product = new Product()   
-        this.disabled = true
-      },
+        this.clearUpdate()
+         },
       error => {        
-        alert("error occured while updating the product")
+        alert(error.httpStatus  + "\n" + error.errorDescription)
+        this.clearUpdate()
+        this.getProductList()
       }
     )
+  }
+
+  clearUpdate()
+  {
+    this.product = new Product()   
+    this.disabled = true;
+    (<HTMLInputElement>document.getElementById("product_" + this.index) || {}).checked = false;
+ 
   }
 
 }

@@ -11,6 +11,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { ModalComponent } from './util/modal/modal.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { SearchPipe } from './pipes/search.pipe';
+import { AuthGuardService } from './services/auth-guard.service';
 
 @NgModule({
   declarations: [
@@ -18,7 +20,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     ProductComponent,
     LoginComponent,
     ErrorComponent,
-    ModalComponent
+    ModalComponent,
+    SearchPipe
   ],
   imports: [
     BrowserModule,
@@ -27,7 +30,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     FormsModule,
     NgbModule
   ],
-  providers: [],
+  providers: [AuthGuardService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

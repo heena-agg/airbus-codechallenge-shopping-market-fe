@@ -33,7 +33,7 @@ export class AuthService {
         console.log("auth",  response.headers.get("Authorization"))        
         // save header bearer token in localstorage
         localStorage.setItem("Authorization", response.headers.get("Authorization") || "") 
-        this.isLoggedIn = true;       
+        localStorage.setItem("LoggedIn", "true") 
         this.router.navigateByUrl("product")
       },
       error => {
